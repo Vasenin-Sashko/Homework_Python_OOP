@@ -32,7 +32,7 @@ class Student:
                 numb +=1
         self.average_rating_hw = sum_grade/numb
         result = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self.average_rating_hw}\n" \
-            f"Курсы в процессе изучения:{courses_in_progress_str}\nЗавершенные курсы:{finished_courses_str}"
+            f"Курсы в процессе изучения: {courses_in_progress_str}\nЗавершенные курсы: {finished_courses_str}"
         return result
 
     def __lt__(self, other):
@@ -85,34 +85,114 @@ class Lecturer(Mentor):
         result = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.average_rating}"
         return result
 
-def __lt__(self, other):
+    def __lt__(self, other):
         if not isinstance(other, Lecturer):
             print('Некорректное сравнение!')
             return
         return self.average_rating < other.average_rating
 
-
+# Экземпляры класса "Student":
 best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
- 
+
+student_1 = Student('Andy', 'Anderson', 'man')
+student_1.courses_in_progress += ['Python']
+student_1.finished_courses += ['js']
+
+student_2 = Student('Kate', 'Cooper', 'woman')
+student_2.courses_in_progress += ['Python']
+student_2.finished_courses += ['Введение в программироание']
+
+# Экземпляры класса "Reviewer":
 cool_reviewer = Reviewer('Some', 'Buddy')
 cool_reviewer.courses_attached += ['Python']
- 
-cool_reviewer.rate_hw(best_student, 'Python', 10)
-cool_reviewer.rate_hw(best_student, 'Python', 10)
-cool_reviewer.rate_hw(best_student, 'Python', 10)
 
+reviewer_1 = Reviewer('Alex', 'Holmes')
+reviewer_1.courses_attached += ['Python']
+
+reviewer_2 = Reviewer('Mary', 'Holmes')
+reviewer_2.courses_attached += ['Python']
+
+# Экземпляры класса "Lecturer":
 cool_lecturer = Lecturer('Tom', 'Candy')
 cool_lecturer.courses_attached += ['Python']
- 
-best_student.rate_lecture(cool_lecturer, 'Python', 9)
-best_student.rate_lecture(cool_lecturer, 'Python', 8)
+
+lecturer_1 = Lecturer('Harry', 'Potter')
+lecturer_1.courses_attached += ['Python']
+
+lecturer_2 = Lecturer('Jerry', 'Blue')
+lecturer_2.courses_attached += ['Python']
+
+# Оценки экспертов:
+cool_reviewer.rate_hw(student_1, 'Python', 8)
+cool_reviewer.rate_hw(best_student, 'Python', 10)
+cool_reviewer.rate_hw(student_2, 'Python', 9)
+
+reviewer_1.rate_hw(best_student, 'Python', 10)
+reviewer_1.rate_hw(student_1, 'Python', 6)
+reviewer_1.rate_hw(student_2, 'Python', 8)
+
+reviewer_2.rate_hw(best_student, 'Python', 8)
+reviewer_2.rate_hw(student_1, 'Python', 7)
+reviewer_2.rate_hw(student_2, 'Python', 8)
+
+# Оценки студентов:
+best_student.rate_lecture(lecturer_1, 'Python', 7)
+best_student.rate_lecture(lecturer_2, 'Python', 8)
 best_student.rate_lecture(cool_lecturer, 'Python', 10)
 
-print(best_student.grades)
+student_1.rate_lecture(cool_lecturer, 'Python', 9)
+student_1.rate_lecture(lecturer_1, 'Python', 8)
+student_1.rate_lecture(lecturer_2, 'Python', 8)
+
+student_2.rate_lecture(cool_lecturer, 'Python', 10)
+student_2.rate_lecture(lecturer_1, 'Python', 5)
+student_2.rate_lecture(lecturer_2, 'Python', 7)
+
+# Список студентов, лекторов и экспертов:
+print(f'Список студентов:\n\n{student_1}\n\n{student_2}\n\n{best_student}')
 print()
-print(cool_reviewer)
+print(f'Список лекторов:\n\n{lecturer_1}\n\n{lecturer_2}\n\n{cool_lecturer}')
 print()
-print(cool_lecturer)
+print(f'Список экспертов:\n\n{reviewer_1}\n\n{reviewer_2}\n\n{cool_reviewer}')
 print()
-print(best_student)
+print()
+
+# Сравнение студентов по средним оценкам за домашние задания:
+print(f'Результат сравнения студентов по средним оценкам за ДЗ: '
+      f'{student_1.name} {student_1.surname} < {student_2.name} {student_2.surname} = {student_1 < student_2}')
+
+# Сравнение студентов по средним оценкам за домашние задания:
+print(f'Результат сравнения лекторов по средним оценкам за лекции: '
+      f'{lecturer_1.name} {lecturer_1.surname} < {lecturer_2.name} {lecturer_2.surname} = {lecturer_1 < lecturer_2}')
+print()
+
+# Реализация функций средних оценок за ДЗ у студентов и средних оценок за лекции у лекторов:
+student_list = [student_1, student_2, best_student]
+lecturer_list = [lecturer_1, lecturer_2, cool_lecturer]
+
+def student_rating(student_list, course):
+    sum_grade = 0
+    numb = 0
+    for person in student_list:
+        if person.courses_in_progress == [course]:
+            sum_grade += person.average_rating_hw
+            numb +=1
+        general_rating = sum_grade/numb
+        return general_rating
+
+print(f"Средняя оценка для всех студентов по курсу {'Python'}: {student_rating(student_list, 'Python')}")
+print()
+
+def lecturer_rating(lecturer_list, course):
+    sum_grade = 0
+    numb = 0
+    for person in lecturer_list:
+        if person.courses_attached == [course]:
+            sum_grade += person.average_rating
+            numb +=1
+        general_rating = sum_grade/numb
+        return general_rating
+
+print(f"Средняя оценка для всех лекторов по курсу {'Python'}: {lecturer_rating(lecturer_list, 'Python')}")
+print()
